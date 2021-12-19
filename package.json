@@ -1,0 +1,12 @@
+{
+    "name": "dockerized-cypress-example",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "cy:open": "cypress open",
+        "cy:run": "cypress run"
+    },
+    "devDependencies": {
+        "cypress": "^9.1.1"
+    }
+}
