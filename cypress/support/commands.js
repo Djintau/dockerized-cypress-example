@@ -23,3 +23,19 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('validateLinks', (selector, prop, result_array) => {
+    cy.get(selector).each(element => {
+        let item = element.prop(prop);
+        if (item) {
+            cy.request({ url: item, failOnStatusCode: false })
+                .its('status').then(status => {
+                    if (status != 200) {
+                        result_array.push(item)
+                    }
+                })
+        } else {
+            result_array.push(`item is missing ${prop} property`)
+        }
+    })
+})

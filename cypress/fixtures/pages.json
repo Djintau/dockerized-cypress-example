@@ -1,0 +1,14 @@
+[
+    {
+        "route": "/standards/badpage",
+        "expected_response": 404
+    },
+    {
+        "route": "/standards/webofdevices/multimodal",
+        "expected_response": 200
+    },
+    {
+        "route": "/standards/webdesign/htmlcss",
+        "expected_response": 200
+    }
+]

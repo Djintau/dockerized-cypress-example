@@ -1,10 +1,6 @@
-describe('Validate response code, absence of console errors and broken links on selected pages', () => {
+const pages = require('../fixtures/pages.json')
 
-    const pages = [
-        { "route": "/standards/badpage", "expected_response": 404},
-        { "route": "/standards/webofdevices/multimodal", "expected_response": 200 },
-        { "route": "/standards/webdesign/htmlcss", "expected_response": 200 }
-    ]
+describe('Validate response code, absence of console errors and broken links on selected pages', () => {
 
     pages.forEach(page => {
 
@@ -28,30 +24,9 @@ describe('Validate response code, absence of console errors and broken links on 
 
         it(`Find ${page.route} broken links`, () => {
             cy.visit(`${Cypress.config().baseUrl}${page.route}`, { failOnStatusCode: false })
-            cy.get("a:not([href*='mailto:'])").each(link => {
-                if (link.prop('href')){
-                    cy.request({ url: link.prop('href'), failOnStatusCode: false })
-                        .its('status').then(status => {
-                            if (status != 200) {
-                                broken_links.push(link.prop('href'))
-                            }
-                        })
-                } else {
-                    broken_links.push(`link is missing href prop`)
-                }
-            })
-            cy.get("img").each(img => {
-                if (img.prop('src')){
-                    cy.request({ url: img.prop('src'), failOnStatusCode: false })
-                        .its('status').then(status => {
-                            if (status != 200) {
-                                broken_links.push(img.prop('src'))
-                            }
-                        })
-                } else {
-                    broken_links.push(`image is missing src prop`)
-                }  
-            }).then(() => {
+            cy.validateLinks("a:not([href*='mailto:'])", "href", broken_links)
+            cy.validateLinks("img", "src", broken_links)
+            .then(() => {
                 if (broken_links.length){
                     // logging of broken links/sources
                     cy.task('log', 'Broken links:')
